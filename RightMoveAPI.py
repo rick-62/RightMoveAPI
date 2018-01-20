@@ -6,7 +6,6 @@ import json
 import re
 
 
-
 class RightMoveAPI():
     """store dataframe of rightmove search results"""
     user_agent = "Python_House_Hunting"
@@ -132,7 +131,6 @@ class RightMoveAPI():
         self.total_pages = total_pages
         return self.total_pages
 
-
     def _parse_list_of_results(self, soup):
         """Parse list of result links"""
         div_tags = soup.findAll("div", { "class" : "propertyCard-details" })
@@ -152,7 +150,6 @@ class RightMoveAPI():
         index_str = "index={}".format(index)
         return "{}&{}".format(url, index_str)
 
-  
     def _parse_house_details(self, soup):
         """Extract data about the property"""
 
@@ -165,7 +162,12 @@ class RightMoveAPI():
         def _extract_beds(soup):
             """Extract number from beginning of title indicating number of beds."""
             h1_tag = soup.find("h1", {"class": "fs-22", "itemprop": "name"})
-            return int((h1_tag.contents[0]).split()[0])
+            beds = (h1_tag.contents[0]).split()[0]
+            try:
+                beds = int(beds)
+            except ValueError:
+                beds = 0
+            return beds
 
         def _extract_address(soup):
             """Extract address from a meta tag."""
@@ -218,9 +220,10 @@ class RightMoveAPI():
 
 
 
-if __name__ == "__main__"        :
+if __name__ == "__main__":
     
     test = RightMoveAPI()
-    results = test.Search(radius=0, max_price=150000)
-    print(results)
-
+    results = test.Search(max_price=100000, min_bedrooms=3, type=False)
+    print("Test successful")
+    with open('output.csv', 'w+') as f:
+        results.to_csv(f)
