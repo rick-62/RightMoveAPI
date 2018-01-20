@@ -196,15 +196,11 @@ class RightMoveAPI():
     def Search(self, **kwargs):
         """input: search terms; output: df of house details"""
         self.search_url = self._construct_search_url(**kwargs)
-        #print(self.search_url)
         soup = self._get_page_content(self.search_url)
         self._parse_list_of_results(soup)
         self.total_pages = self._extract_totalpages(soup)
-        #print("Total pages: {}".format(self.total_pages))
         for page_number in range(2,self.total_pages+1):
-            #print("Properties found: {}".format(len(self.property_links)))
             new_search_url = self._add_page_to_search_url(self.search_url, page_number)
-            #print("Search URL: {}".format(new_search_url))
             soup = self._get_page_content(new_search_url)
             if soup:
                 self._parse_list_of_results(soup)
@@ -222,41 +218,9 @@ class RightMoveAPI():
 
 
 
+if __name__ == "__main__"        :
+    
+    test = RightMoveAPI()
+    results = test.Search(radius=0, max_price=150000)
+    print(results)
 
-
-
-
-           
-
-
-
-
-
-test = RightMoveAPI()
-#soup = test._get_page_content("http://www.rightmove.co.uk/property-for-sale/find.html?locationIdentifier=OUTCODE%5E1543&minBedrooms=2&maxPrice=150000&radius=20.0&propertyTypes=bungalow%2Cdetached%2Csemi-detached%2Cterraced&maxDaysSinceAdded=14&mustHave=garden&dontShow=sharedOwnership%2Cretirement")
-#print(test._construct_search_url(radius=20, max_price=150000, maxdays=14, min_bedrooms=2, 
-                                # inclusions=['garden'], 
-                               #  type=['detached', 'semi-detached', 'terraced', 'bungalow'], 
-                               #  exclusions=['sharedOwnership', 'retirement'] ))
-
-#print(test._extract_totalpages(soup))
-
-
-#//*[@id="l-container"]/div[3]/div/div/div/div[2]/span[3]
-# <span class="pagination-pageInfo" data-bind="text: total">42</span>
-#with open("C:\\Users\\Rich\\Desktop\\content.txt", "w") as f: f.write(str(script_tags))
-
-#prop = "http://www.rightmove.co.uk/property-for-sale/property-68487332.html"
-#soup = test._get_page_content(prop)
-#prop_description = test._parse_house_details(soup)
-#print(prop_description)
-
-results = test.Search(radius=0, max_price=150000)
-print(results)
-
-
-# TODO
-# Include url in output dataframe
-# upload to github
-# create test environment
-# create simple documentation
